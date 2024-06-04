@@ -3,14 +3,17 @@ const {connectMongo, disconnectMongo} = require('./src/mongodb');
 const app=express();
 const PORT = process.env.PORT || 3000;
 
-app.use((req,res,next)=>{
-    res.header("Content-Type", "application/json; chartset=utf-9")
-    next();
-})
+app.use(express.json());
 
-app.get("/", (req, res) =>{
-    res.status(200).send("<center><h1>Bienvenido a la Fruteria</h1></center>")
-})
+app.use(express.static("public"));
+app.use("/static", express.static("public"));
+
+function inicio (req, res)
+{
+   res.sendFile(__dirname + "/public/inicio.html");
+}
+
+app.get("/", inicio);
 
 app.get('/frutas', async(req,res) =>{
     const client = await connectMongo()
@@ -18,7 +21,6 @@ app.get('/frutas', async(req,res) =>{
         res.status(500).send('Error al conectarse a MongoDB')
         return;
     }
-
     const db=client.db('Frutas')
     const frutas= await db.collection('frutas').find().toArray()
     await disconnectMongo()
