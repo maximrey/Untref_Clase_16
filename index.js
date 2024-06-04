@@ -9,7 +9,7 @@ app.use((req,res,next)=>{
 })
 
 app.get("/", (req, res) =>{
-    res.status(200).send("Hola")
+    res.status(200).send("<center><h1>Bienvenido a la Fruteria</h1></center>")
 })
 
 app.get('/frutas', async(req,res) =>{
